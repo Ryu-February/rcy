@@ -9,7 +9,6 @@ void SystemClock_Config(void);
 
 #include "bsp.h"
 
-int x;
 
 void bspInit(void)
 {
