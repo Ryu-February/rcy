@@ -1,0 +1,31 @@
+# 개발 환경 설정 파일 무시
+.cproject
+.project
+.settings/
+*.launch
+
+# 빌드 아웃풋 무시
+Debug/
+Release/
+*.o
+*.elf
+*.bin
+*.hex
+*.map
+*.lst
+*.axf
+*.d
+*.dep
+*.log
+*.bak
+*.tmp
+
+# Eclipse
+.metadata
+.settings
+[Rr]elease
+[Dd]ebug
+.launch
+
+# Git 관련 파일 무시
+.gitignore.txt  # 확장자가 .txt라면 Git이 무시하지 않으므로 추가 필요
