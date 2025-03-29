@@ -23,6 +23,74 @@
 
 /* USER CODE BEGIN INCLUDE */
 
+
+//Using Queue structure
+uint32_t rx_front = 0;
+uint32_t rx_rear = 0;
+uint32_t rx_size = 512;
+uint8_t rx_buf[512] = {0};
+
+uint32_t cdcAvailable(void)
+{
+    uint32_t ret;
+
+    ret = (rx_front - rx_rear) % rx_size;
+
+    return ret;
+}
+
+uint8_t cdcDequeue(void)//Dequeue
+{
+    uint8_t ret;
+
+    ret = rx_buf[rx_front];
+
+    if(rx_front != rx_rear)
+    {
+        rx_front = (rx_front + 1) % rx_size;
+    }
+    return ret;
+}
+
+void cdcEnqueue(uint8_t rx_data)//Enqueue
+{
+    uint32_t rx_next_rear;
+
+    rx_buf[rx_rear] = rx_data;
+
+    rx_next_rear = (rx_rear + 1) % rx_size;
+    if(rx_next_rear != rx_front)
+    {
+        rx_rear = rx_next_rear;
+    }
+}
+
+uint32_t cdcWrite(uint8_t *p_data, uint32_t length)
+{
+    uint8_t ret;
+    uint32_t prev_time;
+
+    prev_time = millis();
+
+    while(1)
+    {
+        ret = CDC_Transmit_FS(p_data, length);
+        if(ret == USBD_OK)
+        {
+            return length;
+        }
+        else if(ret == USBD_FAIL)
+        {
+            return 0;
+        }
+        //if ret value is USBD_BUSY -> in loop
+        if(millis() - prev_time >= 100)//timeout
+        {
+            break;
+        }
+    }
+    return 0;
+}
 /* USER CODE END INCLUDE */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -261,6 +329,13 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   /* USER CODE BEGIN 6 */
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
+
+
+  for(int i = 0; i < *Len; i++)
+  {
+      cdcEnqueue(Buf[i]);
+  }
+
   return (USBD_OK);
   /* USER CODE END 6 */
 }
