@@ -13,9 +13,13 @@
 #include "bsp.h"
 
 
-#define _USE_HW_LED
+#define _USE_HW_LED                 //led
+#define     HW_LED_MAX_CH   1
 
-#define HW_LED_MAX_CH   1
+#define _USE_HW_UART                //uart
+#define     HW_UART_MAX_CH  1
+
+
 
 
 
