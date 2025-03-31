@@ -1,52 +1,56 @@
-# Prerequisites
-*.d
-
-# Object files
+# 🏭 빌드 파일 & 바이너리 (공통)
 *.o
-*.ko
+*.elf
+*.bin
+*.hex
+*.map
+*.out
+*.a
+*.so
+*.exe
+
+# 🖥️ 라즈베리파이 & 리눅스 개발 관련
+*.pyc
+__pycache__/
+*.log
+*.swp
+*.swo
+*.d
+*.dep
+
+# ⚙️ AVR & STM32 관련 (Microchip Studio & CubeIDE)
+*.d
+*.lst
+*.bak
+*.suo
+*.ncb
+*.user
+*.layout
+*.plg
+*.depend
+*.aps
 *.obj
 *.elf
-
-# Linker output
-*.ilk
-*.map
-*.exp
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
+*.lss
 *.hex
+*.eep
+*.sym
+*.lcf
+*.map
 
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
+# 📂 IDE 설정 파일 (공통)
+.vscode/
+.idea/
+*.cproject
+*.project
+*.settings/
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+# 🛠️ Makefile/CMake 빌드 시스템
+build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# 🛑 Git 관련
+.gitignore
