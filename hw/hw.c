@@ -16,6 +16,7 @@ void hwInit(void)
 	rtcInit();
 
 	resetInit();
+	rcyResetInit();
 	ledInit();
 	usbInit();
 	uartInit();

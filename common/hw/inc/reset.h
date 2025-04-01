@@ -13,6 +13,9 @@
 #ifdef _USE_HW_RESET
 
 bool resetInit(void);
+bool rcyResetInit(void);
+
+bool isRcyResetPinRead(/*unsigned char is_pin_valid*/void);
 
 uint32_t resetGetCount(void);
 

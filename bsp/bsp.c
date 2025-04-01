@@ -17,9 +17,6 @@ void bspInit(void)
 
     __HAL_RCC_GPIOD_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
-
-
-
 }
 
 void delay(uint32_t ms)
@@ -65,7 +62,7 @@ void SystemClock_Config(void)
 
     if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
     {
-      Error_Handler();
+        Error_Handler();
     }
     PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC|RCC_PERIPHCLK_USB;
     PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;

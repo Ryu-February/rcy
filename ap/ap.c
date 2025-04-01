@@ -8,6 +8,7 @@
 
 #include "ap.h"
 
+volatile uint32_t rcy_led_count = 0;
 
 void apInit(void)
 {
@@ -20,6 +21,12 @@ void apMain(void)
     uint32_t prev_time;
     uint32_t prev_baud;
     uint32_t led_blink_time;
+
+    if(isRcyResetPinRead())//pa8 status : pull-up
+    {
+        rcy_led_count++;
+        delay(500);
+    }
 
     if(resetGetCount() == 0)
     {
