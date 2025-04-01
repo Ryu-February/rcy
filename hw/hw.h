@@ -12,6 +12,7 @@
 
 #include "led.h"
 #include "uart.h"
+#include "usb.h"
 
 void hwInit(void);
 
