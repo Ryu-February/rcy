@@ -46,19 +46,6 @@ uint32_t cdcAvailable(void)
     return ret;
 }
 
-uint8_t cdcDequeue(void)//Dequeue
-{
-    uint8_t ret;
-
-    ret = rx_buf[rx_front];
-
-    if(rx_front != rx_rear)
-    {
-        rx_front = (rx_front + 1) % rx_size;
-    }
-    return ret;
-}
-
 void cdcEnqueue(uint8_t rx_data)//Enqueue
 {
     uint32_t rx_next_rear;
@@ -70,6 +57,19 @@ void cdcEnqueue(uint8_t rx_data)//Enqueue
     {
         rx_rear = rx_next_rear;
     }
+}
+
+uint8_t cdcDequeue(void)//Dequeue
+{
+    uint8_t ret;
+
+    ret = rx_buf[rx_front];
+
+    if(rx_front != rx_rear)
+    {
+        rx_front = (rx_front + 1) % rx_size;
+    }
+    return ret;
 }
 
 uint32_t cdcWrite(uint8_t *p_data, uint32_t length)
