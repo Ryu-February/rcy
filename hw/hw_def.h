@@ -22,7 +22,7 @@
 #define     HW_LED_MAX_CH   1
 
 #define _USE_HW_UART                //uart
-#define     HW_UART_MAX_CH  1
+#define     HW_UART_MAX_CH  2
 
 
 
