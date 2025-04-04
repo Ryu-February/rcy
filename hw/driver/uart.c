@@ -15,9 +15,9 @@ static bool is_open[UART_MAX_CH];
 
 static queue_t q_buf[UART_MAX_CH];
 static uint8_t rx_buf[256];
-static uint8_t rx_data[UART_MAX_CH];
 
-UART_HandleTypeDef huart1;
+UART_HandleTypeDef  huart1;
+DMA_HandleTypeDef   hdma_usart1_rx;
 
 
 bool uartInit(void)
@@ -51,7 +51,11 @@ bool uartOpen(uint8_t ch, uint32_t baud)
             huart1.Init.OverSampling  = UART_OVERSAMPLING_16;
 
 
-            queueCreate(&q_buf[_DEF_UART2], &rx_buf[0], 256);
+            queueCreate(&q_buf[ch], &rx_buf[0], 256);
+
+            __HAL_RCC_DMA1_CLK_ENABLE();
+            HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
+            HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
 
 
             if (HAL_UART_Init(&huart1) != HAL_OK)
@@ -63,10 +67,12 @@ bool uartOpen(uint8_t ch, uint32_t baud)
                 ret = true;
                 is_open[ch] = true;
 
-                if(HAL_UART_Receive_IT(&huart1, (uint8_t *)&rx_data[_DEF_UART2], 1) != HAL_OK)
+                if(HAL_UART_Receive_DMA(&huart1, (uint8_t *)&rx_buf[0], 256) != HAL_OK)//queue 버퍼 사이즈 맞출려고
                 {
                     ret = false;
                 }
+                q_buf[ch].rear = q_buf[ch].size - hdma_usart1_rx.Instance->CNDTR;
+                q_buf[ch].front = q_buf[ch].rear;//flush 기능이라고 함
             }
             break;
     }
@@ -84,7 +90,9 @@ uint32_t uartAvailable(uint8_t ch)
             ret = cdcAvailable();
             break;
         case _DEF_UART2 :
-            ret = queueAvailable(&q_buf[_DEF_UART2]);
+            q_buf[ch].rear = q_buf[ch].size - hdma_usart1_rx.Instance->CNDTR;
+            ret = queueAvailable(&q_buf[ch]);
+            break;
     }
 
     return ret;
@@ -172,12 +180,14 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
+#if 0
     if(huart->Instance == USART1)
     {
         enqueue(&q_buf[_DEF_UART2], &rx_data[_DEF_UART2], 1);
 
         HAL_UART_Receive_IT(&huart1, (uint8_t *)&rx_data[_DEF_UART2], 1);
     }
+#endif
 }
 
 
@@ -185,12 +195,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-    if(uartHandle->Instance==USART1)
-    {
-    /* USER CODE BEGIN USART1_MspInit 0 */
 
-    /* USER CODE END USART1_MspInit 0 */
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  if(uartHandle->Instance==USART1)
+  {
+  /* USER CODE BEGIN USART1_MspInit 0 */
+
+  /* USER CODE END USART1_MspInit 0 */
     /* USART1 clock enable */
     __HAL_RCC_USART1_CLK_ENABLE();
 
@@ -209,23 +220,40 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+    /* USART1 DMA Init */
+    /* USART1_RX Init */
+    hdma_usart1_rx.Instance = DMA1_Channel5;
+    hdma_usart1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    hdma_usart1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+    hdma_usart1_rx.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_usart1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    hdma_usart1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+    hdma_usart1_rx.Init.Mode = DMA_CIRCULAR;
+    hdma_usart1_rx.Init.Priority = DMA_PRIORITY_LOW;
+    if (HAL_DMA_Init(&hdma_usart1_rx) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart1_rx);
+
     /* USART1 interrupt Init */
     HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(USART1_IRQn);
-    /* USER CODE BEGIN USART1_MspInit 1 */
+  /* USER CODE BEGIN USART1_MspInit 1 */
 
-    /* USER CODE END USART1_MspInit 1 */
-    }
+  /* USER CODE END USART1_MspInit 1 */
+  }
 }
 
 void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 {
 
-    if(uartHandle->Instance==USART1)
-    {
-    /* USER CODE BEGIN USART1_MspDeInit 0 */
+  if(uartHandle->Instance==USART1)
+  {
+  /* USER CODE BEGIN USART1_MspDeInit 0 */
 
-    /* USER CODE END USART1_MspDeInit 0 */
+  /* USER CODE END USART1_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_USART1_CLK_DISABLE();
 
@@ -235,10 +263,14 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     */
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9|GPIO_PIN_10);
 
+    /* USART1 DMA DeInit */
+    HAL_DMA_DeInit(uartHandle->hdmarx);
+
     /* USART1 interrupt Deinit */
     HAL_NVIC_DisableIRQ(USART1_IRQn);
-    /* USER CODE BEGIN USART1_MspDeInit 1 */
+  /* USER CODE BEGIN USART1_MspDeInit 1 */
 
-    /* USER CODE END USART1_MspDeInit 1 */
-    }
+  /* USER CODE END USART1_MspDeInit 1 */
+  }
 }
+
