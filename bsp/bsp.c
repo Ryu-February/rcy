@@ -8,7 +8,7 @@
 void SystemClock_Config(void);
 
 #include "bsp.h"
-
+#include "uart.h"
 
 void bspInit(void)
 {
@@ -17,9 +17,6 @@ void bspInit(void)
 
     __HAL_RCC_GPIOD_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
-
-
-
 }
 
 void delay(uint32_t ms)
@@ -30,6 +27,13 @@ void delay(uint32_t ms)
 uint32_t millis(void)
 {
 	return HAL_GetTick();
+}
+
+int __io_putchar(int ch)
+{
+	//USB_CDC로 printf char 전송
+	uartWrite(_DEF_UART1, (uint8_t *)&ch, 1);
+	return 1;
 }
 
 void SystemClock_Config(void)
