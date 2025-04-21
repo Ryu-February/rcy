@@ -22,9 +22,9 @@ bool resetInit(void)
     {
         rtcBackupRegWrite(1, rtcBackupRegRead(1) + 1);//increase 1
         delay(500);
-        reset_count = rtcBackupRegRead(0);
+        reset_count = rtcBackupRegRead(1);
     }
-    rtcBackupRegWrite(0, 0);
+    rtcBackupRegWrite(1, 0);
 
     return ret;
 }
