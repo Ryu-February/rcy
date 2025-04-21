@@ -27,8 +27,6 @@ void apMain(void)
 	    {
 	        prev_time = millis();
 	        ledToggle(_DEF_LED1);
-
-	        logPrintf("logPrintf test %d\r\n", (int)millis());
 	    }
 	}
 }
