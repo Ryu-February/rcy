@@ -16,9 +16,6 @@ bool usbInit(void)
 
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-    /* GPIO Ports Clock Enable */
-    __HAL_RCC_GPIOB_CLK_ENABLE();
-
 
     GPIO_InitStruct.Pin = GPIO_PIN_12;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
@@ -27,7 +24,7 @@ bool usbInit(void)
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
-    delay(100);
+    delay(200);//100 정도로 너무 짧으면 usb 연결이 처음에 간헐적으로 끊기는 현상이 있음
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
 
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
