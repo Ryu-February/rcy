@@ -13,6 +13,9 @@ void apInit(void)
 {
     uartOpen(_DEF_UART1, 57600);//USB
     uartOpen(_DEF_UART2, 57600);//UART
+
+    cliOpen(_DEF_UART1, 57600);
+    cliOpenLog(_DEF_UART2, 57600);
 }
 
 void apMain(void)
@@ -29,5 +32,14 @@ void apMain(void)
 	        ledToggle(_DEF_LED1);
 	    }
 
+	    if (uartAvailable(_DEF_UART2) > 0)
+		{
+		  uint8_t rx_data;
+		  rx_data = uartRead(_DEF_UART2);
+
+		  uartPrintf(_DEF_UART2, "Rx : 0x%X\n", rx_data);
+		}
+
+		cliMain();
 	}
 }
