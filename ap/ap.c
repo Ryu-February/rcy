@@ -37,7 +37,7 @@ void apMain(void)
 		  uint8_t rx_data;
 		  rx_data = uartRead(_DEF_UART2);
 
-		  uartPrintf(_DEF_UART2, "Rx : 0x%X\n", rx_data);
+		  uartPrintf(_DEF_UART2, "Rx : 0x%X\r\n", rx_data);
 		}
 
 		cliMain();
