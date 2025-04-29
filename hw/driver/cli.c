@@ -130,19 +130,19 @@ void cliShowLog(cli_t *p_cli)
 {
   if (cli_node.is_log == true)
   {
-    uartPrintf(p_cli->log_ch, "Cursor  : %d\n", p_cli->line.cursor);
-    uartPrintf(p_cli->log_ch, "Count   : %d\n", p_cli->line.count);
-    uartPrintf(p_cli->log_ch, "buf_len : %d\n", p_cli->line.buf_len);
-    uartPrintf(p_cli->log_ch, "buf     : %s\n", p_cli->line.buf);
-    uartPrintf(p_cli->log_ch, "line_i  : %d\n", p_cli->hist_line_i);
-    uartPrintf(p_cli->log_ch, "line_lt : %d\n", p_cli->hist_line_last);
-    uartPrintf(p_cli->log_ch, "line_c  : %d\n", p_cli->hist_line_count);
+    uartPrintf(p_cli->log_ch, "Cursor  : %d\r\n", p_cli->line.cursor);
+    uartPrintf(p_cli->log_ch, "Count   : %d\r\n", p_cli->line.count);
+    uartPrintf(p_cli->log_ch, "buf_len : %d\r\n", p_cli->line.buf_len);
+    uartPrintf(p_cli->log_ch, "buf     : %s\r\n", p_cli->line.buf);
+    uartPrintf(p_cli->log_ch, "line_i  : %d\r\n", p_cli->hist_line_i);
+    uartPrintf(p_cli->log_ch, "line_lt : %d\r\n", p_cli->hist_line_last);
+    uartPrintf(p_cli->log_ch, "line_c  : %d\r\n", p_cli->hist_line_count);
 
     for (int i=0; i<p_cli->hist_line_count; i++)
     {
       uartPrintf(p_cli->log_ch, "buf %d   : %s\n", i, p_cli->line_buf[i].buf);
     }
-    uartPrintf(p_cli->log_ch, "\n");
+    uartPrintf(p_cli->log_ch, "\r\n");
   }
 }
 
