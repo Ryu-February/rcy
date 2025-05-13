@@ -27,6 +27,9 @@
 #define _USE_HW_UART                //uart
 #define     HW_UART_MAX_CH  2
 
+#define _USE_HW_CLI
+#define       HW_CLI_LINE_HIS_MAX	4
+#define       HW_CLI_LINE_BUF_MAX	32
 
 
 

@@ -16,6 +16,7 @@
 #include "rtc.h"
 #include "reset.h"
 #include "flash.h"
+#include "cli.h"
 
 void hwInit(void);
 
