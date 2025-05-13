@@ -142,7 +142,7 @@ void cliShowLog(cli_t *p_cli)
     {
       uartPrintf(p_cli->log_ch, "buf %d   : %s\n", i, p_cli->line_buf[i].buf);
     }
-    uartPrintf(p_cli->log_ch, "\r\n");
+    uartPrintf(p_cli->log_ch, "\n");
   }
 }
 
