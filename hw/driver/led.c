@@ -111,6 +111,8 @@ void cliLed(cli_args_t *args)
 				ledToggle(led_ch);
 			}
 		}
+
+		ret = true;
 	}
 
 	if(ret != true)
