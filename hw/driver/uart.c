@@ -8,7 +8,7 @@
 
 #include "uart.h"
 #include "cdc.h"
-#include "queue.h"
+#include "common/hw/core/queue.h"
 
 
 static bool is_open[UART_MAX_CH];
